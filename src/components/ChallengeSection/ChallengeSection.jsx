@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import './ChallengeSection.css';
+import TestContainer from '../TestContainer/TestContainer';
 
 export class ChallengeSection extends Component {
     render() {
@@ -8,6 +9,7 @@ export class ChallengeSection extends Component {
                 <h1 data-aos='fade-down' className='challenge-section-header'>
                     Take a speed test now!
                 </h1>
+                <TestContainer words={4} characters={14} wpm={20} />
             </div>
         );
     }
