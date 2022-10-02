@@ -10,6 +10,8 @@ export default function TestContainer({
     selectedParagraph,
     timeRemaining,
     timerStarted,
+    testInfo,
+    onInputChange,
 }) {
     return (
         <div className='test-container'>
@@ -22,6 +24,8 @@ export default function TestContainer({
                         selectedParagraph={selectedParagraph}
                         timeRemaining={timeRemaining}
                         timerStarted={timerStarted}
+                        testInfo={testInfo}
+                        onInputChange={onInputChange}
                     />
                 </div>
             ) : (

@@ -9,6 +9,8 @@ function ChallengeSection({
     wpm,
     timeRemaining,
     timerStarted,
+    testInfo,
+    onInputChange,
 }) {
     return (
         <div className='challenge-section-container'>
@@ -22,6 +24,8 @@ function ChallengeSection({
                 selectedParagraph={selectedParagraph}
                 timeRemaining={timeRemaining}
                 timerStarted={timerStarted}
+                testInfo={testInfo}
+                onInputChange={onInputChange}
             />
         </div>
     );
