@@ -12,6 +12,7 @@ export default function TestContainer({
     timerStarted,
     testInfo,
     onInputChange,
+    startAgain,
 }) {
     return (
         <div className='test-container'>
@@ -30,7 +31,12 @@ export default function TestContainer({
                 </div>
             ) : (
                 <div className='try-again-container'>
-                    <TryAgain words={words} characters={characters} wpm={wpm} />
+                    <TryAgain
+                        words={words}
+                        characters={characters}
+                        wpm={wpm}
+                        startAgain={startAgain}
+                    />
                 </div>
             )}
         </div>

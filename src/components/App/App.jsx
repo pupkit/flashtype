@@ -4,21 +4,43 @@ import Nav from '../Nav/Nav';
 import Landing from '../Landing/Landing';
 import Footer from '../Footer/Footer';
 import ChallengeSection from '../ChallengeSection/ChallengeSection';
+import { SAMPLE_PARAGRAPHS } from '../../data/sampleParagraph';
 
 const TotalTime = 60;
 const ServiceUrl = 'http://metaphorpsum.com/paragraphs/1/9';
+const DefaultState = {
+    selectedParagraph: '',
+    timerStarted: false,
+    timeRemaining: TotalTime,
+    words: 0,
+    characters: 0,
+    wpm: 0,
+    testInfo: [],
+};
 class App extends React.Component {
-    state = {
-        selectedParagraph: 'Hello, World!',
-        timerStarted: false,
-        timeRemaining: TotalTime,
-        words: 0,
-        characters: 0,
-        wpm: 0,
-        testInfo: [],
+    state = DefaultState;
+
+    fetchNewParagraphFallback = () => {
+        const data =
+            SAMPLE_PARAGRAPHS[
+                Math.floor(Math.random() * SAMPLE_PARAGRAPHS.length)
+            ];
+
+        const selectedParagraphArray = data.split('');
+        const testInfo = selectedParagraphArray.map((selectedLetter) => {
+            return {
+                testLetter: selectedLetter,
+                status: 'notAttempted',
+            };
+        });
+        this.setState({
+            ...DefaultState,
+            testInfo,
+            selectedParagraph: data,
+        });
     };
 
-    componentDidMount() {
+    fetchNewParagraph() {
         fetch(ServiceUrl)
             .then((response) => response.text())
             .then((data) => {
@@ -31,9 +53,19 @@ class App extends React.Component {
                         };
                     }
                 );
-                this.setState({ testInfo, selectedParagraph: data });
+                this.setState({
+                    ...DefaultState,
+                    testInfo,
+                    selectedParagraph: data,
+                });
             });
     }
+
+    componentDidMount() {
+        this.fetchNewParagraphFallback();
+    }
+
+    startAgain = () => this.fetchNewParagraph();
 
     handleUserInput = (inputValue) => {
         if (!this.state.timerStarted) this.startTimer();
@@ -108,6 +140,7 @@ class App extends React.Component {
                     timerStarted={this.state.timerStarted}
                     testInfo={this.state.testInfo}
                     onInputChange={this.handleUserInput}
+                    startAgain={this.startAgain}
                 />
                 {/*Footer*/}
                 <Footer />
