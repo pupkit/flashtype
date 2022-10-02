@@ -19,24 +19,57 @@ class App extends React.Component {
     };
 
     componentDidMount() {
-        // fetch(ServiceUrl)
-        //     .then((response) => response.text())
-        //     .then((data) => {
-        //         this.setState({ timeRemaining: 30, selectedParagraph: data });
-        //     });
-
-        const selectedParagraphArray = this.state.selectedParagraph.split('');
-        const testInfo = selectedParagraphArray.map((selectedLetter) => {
-            return {
-                testLetter: selectedLetter,
-                status: 'notAttempted',
-            };
-        });
-        this.setState({ testInfo: testInfo });
+        fetch(ServiceUrl)
+            .then((response) => response.text())
+            .then((data) => {
+                const selectedParagraphArray = data.split('');
+                const testInfo = selectedParagraphArray.map(
+                    (selectedLetter) => {
+                        return {
+                            testLetter: selectedLetter,
+                            status: 'notAttempted',
+                        };
+                    }
+                );
+                this.setState({ testInfo, selectedParagraph: data });
+            });
     }
 
     handleUserInput = (inputValue) => {
         if (!this.state.timerStarted) this.startTimer();
+
+        const characters = inputValue.length;
+        const words = inputValue.split(' ').length;
+        const index = characters - 1;
+
+        if (index < 0) {
+            this.setState({
+                testInfo: [
+                    {
+                        testLetter: this.state.testInfo[0].testLetter,
+                        status: 'notAttempted',
+                    },
+                    ...this.state.testInfo.slice(1),
+                ],
+                characters,
+                words,
+            });
+        }
+
+        if (index >= this.state.selectedParagraph.length) {
+            this.setState({ characters, words });
+            return;
+        }
+
+        const testInfo = this.state.testInfo;
+        if (!(index === this.state.selectedParagraph.length - 1))
+            testInfo[index + 1].status = 'notAttempted';
+
+        const isCorrect = inputValue[index] === testInfo[index].testLetter;
+
+        testInfo[index].status = isCorrect ? 'correct' : 'incorrect';
+
+        this.setState({ testInfo, words, characters });
     };
 
     startTimer = () => {
